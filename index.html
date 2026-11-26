@@ -17,7 +17,7 @@
 <body>
 <header>
   <img src="dutr4.svg" alt="dutr4" class="logo">
-  <button id="sair" class="link" hidden>Sair</button>
+  <div class="quem-logado"><span id="usuario"></span> <button id="sair" class="link" hidden>Sair</button></div>
 </header>
 
 <main id="login" hidden>
@@ -29,44 +29,66 @@
   </form>
 </main>
 
-<main id="app" hidden>
-  <section>
-    <h1>Novo lançamento</h1>
-    <form id="f-novo">
-      <label>Valor (R$)<input id="valor" inputmode="decimal" placeholder="0,00" required autocomplete="off"></label>
-      <label>Descrição<input id="descricao" placeholder="Ex.: Mercado" required autocomplete="off"></label>
-      <div class="linha">
-        <label>Categoria<select id="categoria" required></select></label>
-        <label>Quem<select id="quem" required></select></label>
-      </div>
-      <div class="linha">
-        <label>Conta/Cartão<select id="conta" required></select></label>
-        <label>Data<input id="data" type="date" required></label>
-      </div>
-      <fieldset><legend>Tipo</legend><div id="tipos" class="seg"></div></fieldset>
-      <details>
-        <summary>Mais opções</summary>
+<div id="app" hidden>
+  <main id="v-lancar">
+    <section>
+      <h1>Novo lançamento</h1>
+      <form id="f-novo">
+        <label>Valor (R$)<input id="valor" inputmode="decimal" placeholder="0,00" required autocomplete="off"></label>
+        <label>Descrição<input id="descricao" placeholder="Ex.: Mercado" required autocomplete="off"></label>
         <div class="linha">
-          <label>Parcelas<input id="parcelas" inputmode="numeric" placeholder="1"></label>
-          <label>Obs<input id="obs" autocomplete="off"></label>
+          <label>Categoria<select id="categoria" required></select></label>
+          <label>Quem<select id="quem" required></select></label>
         </div>
-      </details>
-      <button type="submit" class="primario" id="salvar">Salvar</button>
-      <p id="msg" class="msg" role="status"></p>
-    </form>
-  </section>
+        <div class="linha">
+          <label>Conta/Cartão<select id="conta" required></select></label>
+          <label>Data<input id="data" type="date" required></label>
+        </div>
+        <fieldset><legend>Tipo</legend><div id="tipos" class="seg"></div></fieldset>
+        <details>
+          <summary>Mais opções</summary>
+          <div class="linha">
+            <label>Parcelas<input id="parcelas" inputmode="numeric" placeholder="1"></label>
+            <label>Obs<input id="obs" autocomplete="off"></label>
+          </div>
+        </details>
+        <button type="submit" class="primario" id="salvar">Salvar</button>
+        <p id="msg" class="msg" role="status"></p>
+      </form>
+    </section>
+    <section>
+      <h2 id="titulo-mes">Mês atual</h2>
+      <div id="totais" class="totais"></div>
+      <div id="cats"></div>
+    </section>
+    <section>
+      <h2>Últimos lançamentos</h2>
+      <ul id="recentes" class="lista"></ul>
+    </section>
+  </main>
 
-  <section>
-    <h2 id="titulo-mes">Mês atual</h2>
-    <div id="totais" class="totais"></div>
-    <div id="cats"></div>
-  </section>
+  <main id="v-resumo" hidden>
+    <h1>Resumo</h1>
+    <div class="mes-nav">
+      <button id="mes-ant" class="icone" aria-label="Mês anterior">‹</button>
+      <select id="mes-sel" aria-label="Mês"></select>
+      <button id="mes-prox" class="icone" aria-label="Próximo mês">›</button>
+    </div>
+    <p id="aviso-mes" class="nota"></p>
+    <div id="r-conteudo"></div>
+  </main>
 
-  <section>
-    <h2>Últimos lançamentos</h2>
-    <ul id="recentes" class="lista"></ul>
-  </section>
-</main>
+  <main id="v-ativos" hidden>
+    <h1>Ativos e aportes</h1>
+    <div id="a-conteudo"></div>
+  </main>
+</div>
+
+<nav id="nav" hidden>
+  <button data-v="lancar" aria-pressed="true">Lançar</button>
+  <button data-v="resumo" aria-pressed="false">Resumo</button>
+  <button data-v="ativos" aria-pressed="false">Ativos</button>
+</nav>
 
 <script src="config.js"></script>
 <script src="app.js"></script>
