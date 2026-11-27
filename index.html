@@ -78,6 +78,21 @@
     <div id="r-conteudo"></div>
   </main>
 
+  <main id="v-importar" hidden>
+    <h1>Importar extrato ou fatura</h1>
+    <p class="nota">Extrato da conta em OFX. Fatura do cartão em CSV, XLS ou PDF (o CSV é o mais preciso). O arquivo é lido aqui no aparelho; só vão para a planilha os lançamentos que você confirmar.</p>
+    <label>Arquivo<input id="i-arquivo" type="file" accept=".ofx,.csv,.txt,.xls,.xlsx,.pdf"></label>
+    <div id="i-opcoes" hidden>
+      <div class="linha">
+        <label>Conta/Cartão<select id="i-conta"></select></label>
+        <label id="i-fech-l">Fechamento da fatura<input id="i-fech" type="date"></label>
+      </div>
+      <p class="nota" id="i-fech-nota">As parcelas entram na data de fechamento, como no resto da planilha.</p>
+    </div>
+    <p id="i-msg" class="msg" role="status"></p>
+    <div id="i-revisao"></div>
+  </main>
+
   <main id="v-ativos" hidden>
     <h1>Ativos e aportes</h1>
     <div id="a-conteudo"></div>
@@ -87,10 +102,13 @@
 <nav id="nav" hidden>
   <button data-v="lancar" aria-pressed="true">Lançar</button>
   <button data-v="resumo" aria-pressed="false">Resumo</button>
+  <button data-v="importar" aria-pressed="false">Importar</button>
   <button data-v="ativos" aria-pressed="false">Ativos</button>
 </nav>
 
 <script src="config.js"></script>
+<script src="importar-motor.js"></script>
 <script src="app.js"></script>
+<script src="importar.js"></script>
 </body>
 </html>

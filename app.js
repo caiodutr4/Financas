@@ -14,6 +14,7 @@
   let senha = '', usuario = '', tipo = 'Despesa', primeiraVez = true;
   try { senha = localStorage.getItem('dutr4_senha') || ''; } catch (e) {}
   let cache = {};          // dados por tela
+  let idEnvio = '', ultimoItem = '';
   let mesSel = '';         // mês escolhido no Resumo
 
   async function chamar(corpo) {
@@ -28,11 +29,12 @@
     $('usuario').textContent = nome === 'app' ? usuario : '';
   }
   function vista(v) {
-    ['lancar', 'resumo', 'ativos'].forEach(n => { $('v-' + n).hidden = n !== v; });
+    ['lancar', 'resumo', 'importar', 'ativos'].forEach(n => { $('v-' + n).hidden = n !== v; });
     document.querySelectorAll('#nav button').forEach(b => b.setAttribute('aria-pressed', b.dataset.v === v));
     window.scrollTo(0, 0);
     if (v === 'resumo') carregaResumo(mesSel);
     if (v === 'ativos') carregaAtivos();
+    if (v === 'importar' && window.Importar) window.Importar.abrir();
   }
 
   /* ---------- Lançar ---------- */
@@ -175,13 +177,21 @@
     const valor = parseFloat($('valor').value.replace(/\./g, '').replace(',', '.'));
     if (!(valor > 0)) { $('msg').textContent = 'Informe um valor maior que zero.'; return; }
     const item = { valor, descricao: $('descricao').value, categoria: $('categoria').value, quem: $('quem').value, conta: $('conta').value, data: $('data').value, tipo, parcelas: $('parcelas').value, obs: $('obs').value };
+    const assinatura = JSON.stringify(item);
+    if (assinatura !== ultimoItem) { ultimoItem = assinatura; idEnvio = Date.now().toString(36) + Math.random().toString(36).slice(2); }
     $('salvar').disabled = true; $('msg').textContent = 'Salvando...';
     try {
-      const d = await chamar({ acao: 'adicionar', item });
+      const d = await chamar({ acao: 'adicionar', item, id: idEnvio });
       if (!d.ok) { $('msg').textContent = 'Não salvou: ' + d.erro; }
-      else { $('msg').textContent = 'Salvo.'; ['valor', 'descricao', 'parcelas', 'obs'].forEach(i => $(i).value = ''); cache = {}; mostraLancar(d); $('valor').focus(); }
+      else { ultimoItem = ''; $('msg').textContent = 'Salvo.'; ['valor', 'descricao', 'parcelas', 'obs'].forEach(i => $(i).value = ''); cache = {}; mostraLancar(d); $('valor').focus(); }
     } catch (e) { $('msg').textContent = 'Sem conexão. Não salvou, tente de novo.'; }
     $('salvar').disabled = false;
+  };
+
+  // Usado pela tela Importar
+  window.App = {
+    chamar, usuario: () => usuario,
+    aposGravar: async () => { cache = {}; try { const d = await chamar({ acao: 'iniciar' }); if (d.ok) mostraLancar(d); } catch (e) {} }
   };
 
   iniciar();
